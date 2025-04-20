@@ -1,0 +1,72 @@
+# Tilt-Triggered Alarm System
+
+A PlatformIO-based Arduino project that implements a tilt-activated alarm system using a tilt ball switch sensor and an active buzzer.
+
+## Description
+
+This project creates a simple but effective tilt detection alarm system. When the device is tilted beyond a certain threshold, it triggers an audible alarm through an active buzzer. The system is ideal for security applications or scenarios where motion/tilt detection is required.
+
+## Hardware Requirements
+
+- Arduino Mega 2560 board
+- Active Buzzer (connected to pin 11)
+- Tilt Ball Switch Sensor (connected to pin 7)
+- Appropriate power supply
+- USB cable for programming
+
+## Pin Configuration
+
+- Digital Pin 11: Active Buzzer (Output)
+- Digital Pin 7: Tilt Ball Switch (Input with internal pull-up)
+
+## Software Requirements
+
+- PlatformIO IDE (VS Code Extension)
+- Arduino Framework
+
+## Setup Instructions
+
+1. Clone or download this repository
+2. Open the project in VS Code with PlatformIO extension installed
+3. Connect your Arduino Mega 2560 to your computer
+4. Verify that the upload port in `platformio.ini` matches your board's COM port
+5. Build and upload the project
+
+## Usage
+
+1. Power up the device
+2. The system will automatically begin monitoring for tilt
+3. When the device is level, the buzzer remains silent
+4. When tilted, the buzzer activates
+5. Serial monitoring (9600 baud) provides real-time status updates
+
+## Serial Communication
+
+The device communicates over serial at 9600 baud rate, providing:
+- Current sensor state
+- Buzzer activation status
+- Signal value readings
+
+## Project Structure
+
+```
+Tilt-Triggered Alarm System/
+├── src/
+│   └── main.cpp          # Main program code
+├── include/              # Header files (if any)
+├── lib/                  # Project-specific libraries
+├── platformio.ini        # Project configuration
+└── README               # This file
+```
+
+## Author
+
+Troy Johnson
+
+## Created
+
+April 20, 2025
+
+## License
+
+This project is open-source and available under the MIT License.
