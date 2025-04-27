@@ -59,7 +59,7 @@ void loop() {
   // If tilt sensor is at rest (ball making contact, signal LOW)
   if(tiltSignal == 0){
     digitalWrite(activeBuzzer, LOW);     // Turn off the buzzer
-    Serial.println("Buzzer Deactivated");
+    Serial.println("Buzzer Inactive");
     Serial.println("Signal Val: "+tiltSignal);
     delay(1000);                       // Delay for 1 second to avoid rapid toggling
   }
