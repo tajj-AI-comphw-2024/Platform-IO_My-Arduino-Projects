@@ -1,0 +1,96 @@
+# **RGB LED Controller via Membrane Keypad - Documentation**
+
+## **Keypad Responsibilities**
+
+### **Numeric Keys (`0-9`)**
+- **Input Values**: Allow the user to input numeric values, such as setting RGB brightness levels or selecting a mode.
+- **Direct Control**: Map specific numbers to predefined RGB colors or patterns.
+
+---
+
+### **Special Keys (`A`, `B`, `C`, `D`)**
+- **Mode Selection**: Switch between different modes:
+  - **`A`: Static RGB Color Mode**
+    - Keys `1–8` select predefined colors.
+  - **`B`: Random Color Mode**
+    - LEDs change randomly without numeric input.
+  - **`C`: Color Cycling Mode**
+    - Keys `1–9` adjust the cycling speed or pattern.
+  - **`D`: Custom User-Defined Mode**
+    - Keys `0–9` allow users to input RGB values (e.g., `255` for Red, `128` for Green, etc.).
+
+---
+
+## **Modes and Their Functionalities**
+
+### **Static RGB Color Mode (`A`)**
+- **Description**: Users can select from a predefined set of static colors using keys `1–9`.
+- **Predefined Colors**:
+  1. **Red**: `(255, 0, 0)`
+  2. **Green**: `(0, 255, 0)`
+  3. **Blue**: `(0, 0, 255)`
+  4. **Yellow**: `(255, 255, 0)`
+  5. **Cyan**: `(0, 255, 255)`
+  6. **Magenta**: `(255, 0, 255)`
+  7. **White**: `(255, 255, 255)`
+  8. **Off**: `(0, 0, 0)` (optional for turning off the LEDs)
+  9. **Brightness Mode**: Decrease (`0` key), and Increase (`1` key) by +/- 65. If below `0`, it resets to `0`.
+
+---
+
+### **Random Color Mode (`B`)**
+- **Description**: LEDs change to random colors at regular intervals.
+- **User Interaction**: No numeric input is required in this mode.
+
+---
+
+### **Color Cycling Mode (`C`)**
+- **Description**: LEDs cycle through a sequence of colors smoothly or stepwise.
+- **Color Sequences**:
+  1. **Rainbow Cycle**:
+     - Gradually transition through the colors of the rainbow (Red → Orange → Yellow → Green → Cyan → Blue → Magenta → Red).
+     - Use intermediate RGB values for smooth transitions.
+  2. **Primary Colors Cycle**:
+     - Cycle through Red → Green → Blue → Red.
+  3. **Custom Sequence**:
+     - Define a custom sequence, such as:
+       - Red → Yellow → Green → Cyan → Blue → Magenta → White → Off.
+  4. **Brightness Fade**:
+     - Cycle through a single color (e.g., Red) while fading its brightness up and down.
+- **User Interaction**: Keys `1–9` adjust the cycling speed or pattern.
+
+---
+
+### **Custom User-Defined Mode (`D`)**
+- **Description**: Users can input specific RGB values to create their own colors.
+- **How It Works**:
+  1. **Input RGB Values**:
+     - Users input values for Red, Green, and Blue sequentially.
+     - Use the `#` key to confirm each value and move to the next color component.
+     - Example:
+       - User presses `2`, `5`, `5`, `#` → Red = `255`.
+       - User presses `1`, `2`, `8`, `#` → Green = `128`.
+       - User presses `6`, `4`, `#` → Blue = `64`.
+  2. **Save Custom Colors**:
+     - Allow users to save their custom color to a specific key (e.g., `1–9`) for quick access later.
+  3. **Additional Features**:
+     - Let users adjust brightness or fade effects for their custom color.
+
+---
+
+## **Special Keys**
+
+### **`*` Key**
+- **Reset/Cancel**: Reset the current input or return to the default state.
+
+### **`#` Key**
+- **Confirm/Apply**: Confirm the current input or apply the selected settings.
+
+---
+
+## **Implementation Notes**
+- For **Static Mode (`A`)**, users can select a color using numeric keys (`1–9`).
+- For **Cycling Mode (`C`)**, users can control the speed of transitions using a delay or adjust patterns dynamically.
+- For **Custom Mode (`D`)**, users can input RGB values and save custom colors for later use.
+
+This layout provides intuitive control over the RGB LED functionality while leveraging the full keypad. It balances simplicity for basic users with advanced features for those who want more customization.
