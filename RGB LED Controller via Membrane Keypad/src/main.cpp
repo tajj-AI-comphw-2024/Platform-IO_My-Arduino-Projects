@@ -550,6 +550,7 @@ void customColor() {
                     analogWrite(greenTLED, greenVal);
                     analogWrite(blueTLED, blueVal);
                     
+                    
                     Serial.println("Custom color applied!");
                     return;
                 }
