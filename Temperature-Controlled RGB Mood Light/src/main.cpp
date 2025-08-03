@@ -10,7 +10,7 @@ const int redRGBLED = 11;
 
 //DHT11 Sensor
 const int DHTPIN = 10;
-DHT dht(DHTPIN, DHT11); // Initialize DHT sensor for normal 16mhz Arduino
+DHT dht(DHTPIN, DHT22); // Initialize DHT sensor for normal 16mhz Arduino
 
 void setup() {
   // put your setup code here, to run once:
