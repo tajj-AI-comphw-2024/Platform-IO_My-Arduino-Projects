@@ -1,21 +1,21 @@
-//Libaries & Intialization
+// Libraries & Initialization
 #include <Arduino.h>
 #include <DHT.h> // DHT sensor library from Adafruit
 
-//Pin Connections & Objects
-// RGB Connections
+// Pin Connections & Objects
+// RGB LED Pins
 const int blueRGBLED = 13;
 const int greenRGBLED = 12;
 const int redRGBLED = 11;
 
-// Active Buzzer Connections
-const int buzzerPin = 9; // Buzzer pin
+// Buzzer Pin
+const int buzzerPin = 9;
 
-//DHT22 Sensor
+// DHT22 Sensor Pin
 const int DHTPIN = 10;
-DHT dht(DHTPIN, DHT22); // Initialize DHT sensor for normal 16mhz Arduino
+DHT dht(DHTPIN, DHT22); // Initialize DHT sensor
 
-// Non-blocking alert state variables
+// Non-blocking alert state variables for buzzer and LED
 bool alertActive = false;
 unsigned long alertStartTime = 0;
 unsigned long lastBuzzerTime = 0;
@@ -24,11 +24,12 @@ int buzzerCount = 0;
 bool buzzerOn = false;
 bool redLedOn = false;
 
-const unsigned long buzzerInterval = 400; // ms between buzzer pulses
-const unsigned long buzzerPause = 5000;   // ms pause after 3 buzzes
-const unsigned long buzzerPulseDuration = 200; // ms buzzer ON duration
-const unsigned long redFlashInterval = 200; // ms for red LED flash
+const unsigned long buzzerInterval = 400;      // Interval between buzzer pulses (ms)
+const unsigned long buzzerPause = 5000;        // Pause after 3 buzzes (ms)
+const unsigned long buzzerPulseDuration = 200; // Buzzer ON duration (ms)
+const unsigned long redFlashInterval = 200;    // Red LED flash interval (ms)
 
+// Start alert: buzzer and flashing red LED
 void startTempAlert() {
   alertActive = true;
   alertStartTime = millis();
@@ -41,47 +42,52 @@ void startTempAlert() {
 }
 
 void setup() {
-  // put your setup code here, to run once:
+  // Initialize pin modes
   pinMode(redRGBLED, OUTPUT);
   pinMode(blueRGBLED, OUTPUT);
   pinMode(greenRGBLED, OUTPUT);
-  pinMode(buzzerPin, OUTPUT); // Set buzzer pin as output
-  delay(1000); // Allow sensor to power up
-  dht.begin(); // Start the DHT sensor
-  Serial.begin(9600); // Start the serial communication at 9600 baud rate
+  pinMode(buzzerPin, OUTPUT);
+  delay(1000);      // Allow sensor to power up
+  dht.begin();      // Start DHT sensor
+  Serial.begin(9600); // Start serial communication
 }
 
 unsigned long lastReadTime = 0;
-const unsigned long readInterval = 2000; // Read every 2 seconds
+const unsigned long readInterval = 2000; // Sensor read interval (ms)
 
 void loop() {
-  unsigned long currentTime = millis(); // Get the current time in milliseconds
-  // Check if it's time to read the sensor
-  // If the current time minus the last read time is greater than or equal to the read interval
-  // then read the sensor and update the last read time
+  unsigned long currentTime = millis(); // Current time (ms)
+
+  // Sensor reading logic
   if (currentTime - lastReadTime >= readInterval) {
     lastReadTime = currentTime;
     float humidity = dht.readHumidity();
     float tempC = dht.readTemperature();
-    float tempF = dht.readTemperature(true);  
+    float tempF = dht.readTemperature(true);
+
+    // Check for sensor errors
     if (isnan(humidity) || isnan(tempC) || isnan(tempF)) {
       Serial.println("Failed to read from DHT22! Check wiring and pull-up resistor.");
       return;
     }
+
+    // LED and alert logic based on temperature
     if (tempC < 20) {
-      digitalWrite(blueRGBLED, HIGH);
+      digitalWrite(blueRGBLED, HIGH);   // Cold: blue
       digitalWrite(greenRGBLED, LOW);
       digitalWrite(redRGBLED, LOW);
       alertActive = false;
     } else if (tempC >= 20 && tempC < 30) {
       digitalWrite(blueRGBLED, LOW);
-      digitalWrite(greenRGBLED, HIGH);
+      digitalWrite(greenRGBLED, HIGH); // Comfortable: green
       digitalWrite(redRGBLED, LOW);
     } else {
       digitalWrite(blueRGBLED, LOW);
       digitalWrite(greenRGBLED, LOW);
-      startTempAlert();
+      startTempAlert();                // Hot: start alert
     }
+
+    // Print sensor readings to Serial
     float heatIndexC = dht.computeHeatIndex(tempC, humidity, false);
     float heatIndexF = dht.computeHeatIndex(tempF, humidity, true);
     Serial.print("Humidity: ");
@@ -96,16 +102,17 @@ void loop() {
     Serial.print(heatIndexF);
     Serial.println("°F");
   }
-  // Non-blocking alert logic
+
+  // Non-blocking alert logic for buzzer and red LED
   if (alertActive) {
     unsigned long now = millis();
-    // Red LED flashing
+    // Flash red LED
     if (now - lastRedFlashTime >= redFlashInterval) {
       lastRedFlashTime = now;
       redLedOn = !redLedOn;
       digitalWrite(redRGBLED, redLedOn ? HIGH : LOW);
     }
-    // Buzzer logic
+    // Buzzer pulse logic
     if (buzzerCount < 3) {
       if (!buzzerOn && now - lastBuzzerTime >= buzzerInterval) {
         buzzerOn = true;
@@ -118,14 +125,14 @@ void loop() {
         buzzerCount++;
       }
     } else {
-      // Wait for pause before restarting buzzer sequence
+      // Pause before restarting buzzer sequence
       if (now - alertStartTime >= buzzerPause) {
         buzzerCount = 0;
         alertStartTime = now;
       }
     }
   } else {
-    // If not alert, make sure buzzer and red LED are off
+    // Ensure buzzer and red LED are off when not alerting
     digitalWrite(buzzerPin, LOW);
     digitalWrite(redRGBLED, LOW);
   }
